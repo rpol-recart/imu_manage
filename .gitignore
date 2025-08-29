@@ -1,0 +1,9 @@
+env/
+__pycache__/
+.env
+.env.local
+.env*.local
+*.mp4
+.pytest_cache/
+*.onnx
+*.bin
