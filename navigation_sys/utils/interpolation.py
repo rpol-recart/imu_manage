@@ -15,6 +15,109 @@ _SLERP_THRESHOLD = 0.9995
 _TWO_PI = 2 * math.pi
 _PI = math.pi
 
+def interpolate_orientation_data(
+    data_list: List[Tuple[int, Dict[str, float]]],
+    target_timestamp: int
+) -> Optional[Dict[str, float]]:
+    """
+    Выполняет сферическую линейную интерполяцию (Slerp) кватернионов ориентации IMU.
+
+    Args:
+        data_list: Список (timestamp_ms, data_json), где data_json содержит кватернион.
+        target_timestamp: Целевое время в миллисекундах.
+
+    Returns:
+        Интерполированный кватернион в формате {"quat_w": w, "quat_x": x, ...} или None.
+    """
+    if len(data_list) < 2:
+        return None
+
+    # Сортируем по времени
+    sorted_data = sorted(data_list, key=lambda x: x[0])
+    
+    # Поиск интервала [t0, t1], содержащего target_timestamp
+    t0, q0_data = None, None
+    t1, q1_data = None, None
+
+    for i in range(len(sorted_data) - 1):
+        t_a, data_a = sorted_data[i]
+        t_b, data_b = sorted_data[i + 1]
+        if t_a <= target_timestamp <= t_b:
+            # Проверяем окно интерполяции (±500 мс согласно ТЗ)
+            if t_b - t_a <= 1000:  # Разница не более 1 сек (2x500 мс)
+                t0, q0_data = t_a, data_a
+                t1, q1_data = t_b, data_b
+                break
+
+    if t0 is None or t1 is None:
+        return None
+
+    # Извлечение кватернионов
+    q0 = (q0_data["quat_w"], q0_data["quat_x"], q0_data["quat_y"], q0_data["quat_z"])
+    q1 = (q1_data["quat_w"], q1_data["quat_x"], q1_data["quat_y"], q1_data["quat_z"])
+
+    # Параметр интерполяции
+    dt = t1 - t0
+    if dt == 0:
+        return None
+    t = (target_timestamp - t0) / dt
+
+    try:
+        # Используем существующую функцию Slerp
+        w, x, y, z = slerp_quaternion(q0, q1, t)
+        return {"quat_w": w, "quat_x": x, "quat_y": y, "quat_z": z}
+    except (ValueError, ZeroDivisionError):
+        return None
+
+def interpolate_gps_data(data_list: list, target_timestamp: int) -> dict or None:
+    """
+    Линейная интерполяция GPS-координат по времени.
+
+    Args:
+        data_list: Список (timestamp_ms, data_dict), отсортированный по времени.
+                   data_dict = {"lat": float, "lon": float, "alt": float}
+        target_timestamp: Целевое время (мс).
+
+    Returns:
+        dict с ключами "lat", "lon", "alt" или None, если интерполяция невозможна.
+    """
+    if len(data_list) < 2:
+        return None
+
+    # Извлечение временных меток
+    timestamps = [item[0] for item in data_list]
+
+    # Проверка: находится ли целевое время в пределах ±500 мс от диапазона данных
+    min_time = min(timestamps)
+    max_time = max(timestamps)
+    window_ms = 500
+
+    if target_timestamp < min_time - window_ms or target_timestamp > max_time + window_ms:
+        return None
+
+    # Поиск интервала [t0, t1], содержащего target_timestamp
+    for i in range(len(data_list) - 1):
+        t0, d0 = data_list[i]
+        t1, data1 = data_list[i + 1]
+        d1 = data1  # Это data_json
+
+        if t0 <= target_timestamp <= t1:
+            if t1 == t0:
+                return None  # Защита от деления на ноль
+
+            ratio = (target_timestamp - t0) / (t1 - t0)
+
+            lat = d0["lat"] + (d1["lat"] - d0["lat"]) * ratio
+            lon = d0["lon"] + (d1["lon"] - d0["lon"]) * ratio
+            alt = d0["alt"] + (d1["alt"] - d0["alt"]) * ratio
+
+            return {"lat": lat, "lon": lon, "alt": alt}
+
+    # Если целевое время вне [min_time, max_time], но в пределах окна ±500 мс
+    # Можно выполнить экстраполяцию? Нет — ТЗ требует интерполяции только.
+    # Поэтому возвращаем None, если нет подходящего интервала
+    return None
+
 
 def linear_interpolate(x0: float, y0: float, x1: float, y1: float, x: float) -> Optional[float]:
     """
