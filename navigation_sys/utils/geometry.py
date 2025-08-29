@@ -315,6 +315,77 @@ def calculate_machine_center(
         gps_data_list, sensor_configs)
     return (result.lat, result.lon, result.alt) if result else None
 
+def calculate_machine_center_and_azimuth(
+    gps1_data: Dict[str, Any],
+    gps2_data: Dict[str, Any],
+    config: Dict[str, Any]
+) -> Optional[Dict[str, Any]]:
+    """
+    Вычисляет центр машины и азимут, учитывая произвольную геометрию установки антенн.
+    Работает даже при диагональной установке.
+    """
+    # ... (проверки валидности данных)
+
+    # Получаем смещения из конфига
+    sensor_configs = config.get("gps", {}).get("sensors", [])
+    offset1 = next((s["offset"] for s in sensor_configs if s["id"] == gps1_data["sensor_id"]), {"x": 0, "y": 0})
+    offset2 = next((s["offset"] for s in sensor_configs if s["id"] == gps2_data["sensor_id"]), {"x": 0, "y": 0})
+
+    # Текущие координаты
+    lat1, lon1 = gps1_data["lat"], gps1_data["lon"]
+    lat2, lon2 = gps2_data["lat"], gps2_data["lon"]
+
+    # 1. Вектор между антеннами в метрах (глобальная СК)
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+    ref_lat = (lat1 + lat2) / 2
+    dy_geo = dlat * 111319.0
+    dx_geo = dlon * 111319.0 * math.cos(math.radians(ref_lat))
+
+    # 2. Ожидаемый вектор в локальной СК (разность смещений)
+    dx_local = offset2["x"] - offset1["x"]
+    dy_local = offset2["y"] - offset1["y"]
+
+    # 3. Углы векторов
+    angle_local = math.atan2(dy_local, dx_local)
+    angle_geo = math.atan2(dy_geo, dx_geo)
+
+    # 4. Азимут машины
+    azimuth_rad = angle_geo - angle_local
+    azimuth_deg = math.degrees(azimuth_rad) % 360
+
+    # 5. Пересчёт центра
+    def rotate(dx, dy, angle):
+        cos_a = math.cos(angle)
+        sin_a = math.sin(angle)
+        return dx * cos_a - dy * sin_a, dx * sin_a + dy * cos_a
+
+    # Поворачиваем смещения антенн
+    x1_rot, y1_rot = rotate(offset1["x"], offset1["y"], azimuth_rad)
+    x2_rot, y2_rot = rotate(offset2["x"], offset2["y"], azimuth_rad)
+
+    # Переводим в градусы
+    lat_per_m = 1 / 111319.0
+    lon_per_m = 1 / (111319.0 * math.cos(math.radians(lat1)))
+
+    # Центр из позиции антенны 1
+    lat_c1 = lat1 - x1_rot * lat_per_m
+    lon_c1 = lon1 - y1_rot * lon_per_m
+
+    # Центр из позиции антенны 2
+    lat_c2 = lat2 - x2_rot * lat_per_m
+    lon_c2 = lon2 - y2_rot * lon_per_m
+
+    # Средний центр
+    lat_center = (lat_c1 + lat_c2) / 2.0
+    lon_center = (lon_c1 + lon_c2) / 2.0
+    alt_center = (gps1_data["alt"] + gps2_data["alt"]) / 2.0
+
+    return {
+        "center": {"lat": lat_center, "lon": lon_center, "alt": alt_center},
+        "azimuth": azimuth_deg,
+        "timestamp": (gps1_data["timestamp"] + gps2_data["timestamp"]) // 2
+    }
 
 def calculate_azimuth_from_gps_vector(
     lat1: float, lon1: float, lat2: float, lon2: float
