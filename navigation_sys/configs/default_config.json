@@ -9,9 +9,9 @@
   },
   "database": {
     "path": "test_sensor_data.db",
-    "retention_minutes": 1,
-    "batch_size":10,
-    "batch_timeout":0.5
+    "retention_minutes": 300,
+    "batch_size":3,
+    "batch_timeout":2
   },
   "gps": {
     "sensors": [
