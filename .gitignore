@@ -8,3 +8,4 @@ __pycache__/
 *.onnx
 *.bin
 *_bak.py
+*.db
