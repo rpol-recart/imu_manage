@@ -7,54 +7,8 @@ from dataclasses import dataclass
 from enum import Enum
 from ..services.logger_service import LoggerService
 from ..storage.database_manager import DatabaseManager
-
-
-class ValidationResult(Enum):
-    """Результаты валидации GPS данных."""
-    VALID = "valid"
-    INVALID_COORDINATES = "invalid_coordinates"
-    POOR_HDOP = "poor_hdop"
-    EXCESSIVE_SPEED = "excessive_speed"
-    POSITION_OUTLIER = "position_outlier"
-    INVALID_NMEA_STATUS = "invalid_nmea_status"
-    STALE_TIMESTAMP = "stale_timestamp"
-
-
-@dataclass
-class GPSCoordinates:
-    """Структура для GPS координат."""
-    lat: float
-    lon: float
-    alt: float
-
-    def is_valid(self) -> bool:
-        """Проверяет базовую валидность координат."""
-        return all(
-            isinstance(coord, (int, float)) and
-            abs(coord) != float('inf') and
-            coord == coord  # проверка на NaN
-            for coord in [self.lat, self.lon, self.alt]
-        )
-
-    def distance_to(self, other: 'GPSCoordinates') -> float:
-        """Вычисляет расстояние до другой точки в метрах (формула гаверсинусов)."""
-        if not self.is_valid() or not other.is_valid():
-            return float('inf')
-
-        # Радиус Земли в метрах
-        R = 6371000
-
-        lat1_rad = math.radians(self.lat)
-        lat2_rad = math.radians(other.lat)
-        delta_lat = math.radians(other.lat - self.lat)
-        delta_lon = math.radians(other.lon - self.lon)
-
-        a = (math.sin(delta_lat / 2) ** 2 +
-             math.cos(lat1_rad) * math.cos(lat2_rad) *
-             math.sin(delta_lon / 2) ** 2)
-        c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-
-        return R * c
+from ..configs import ConfigProvider, CONFIG
+from ..handlers.models import GPSCoordinates, ValidationResult
 
 
 @dataclass
@@ -123,8 +77,8 @@ class GPSValidationConfig:
 class GPSValidator:
     """Класс для валидации GPS данных."""
 
-    def __init__(self, config: GPSValidationConfig):
-        self.config = config
+    def __init__(self):
+        self.config = CONFIG.data.gps.validation
         self.logger = LoggerService.get_logger(self.__class__.__name__)
 
     def validate(self, data_point: GPSDataPoint, last_valid_point: Optional[GPSDataPoint] = None) -> Tuple[ValidationResult, str]:
@@ -134,9 +88,9 @@ class GPSValidator:
         Returns:
             Tuple[ValidationResult, str]: Результат валидации и описание причины
         """
-        # 1. Базовая валидация координат
-        if not data_point.coordinates.is_valid():
-            return ValidationResult.INVALID_COORDINATES, "Координаты содержат NaN или Inf"
+        # 1. Базовая валидация координат реализовано в GPSCoordinates
+        # if not data_point.coordinates.is_valid():
+        #    return ValidationResult.INVALID_COORDINATES, "Координаты содержат NaN или Inf"
 
         # 2. Проверка актуальности временной метки
         current_time_ms = int(time.time() * 1000)
@@ -242,7 +196,7 @@ class GPSDataHandler:
     Обеспечивает приём, валидацию, фильтрацию и сохранение данных от GPS-датчиков.
     """
 
-    def __init__(self, config: Dict[str, Any], database_manager: DatabaseManager):
+    def __init__(self, config: ConfigProvider, database_manager: DatabaseManager):
         """
         Инициализация обработчика GPS данных.
 
@@ -255,14 +209,13 @@ class GPSDataHandler:
         self.db_manager = database_manager
 
         # Инициализация компонентов
-        self.validation_config = GPSValidationConfig(config)
-        self.validator = GPSValidator(self.validation_config)
+        self.validator = GPSValidator()
         self.cache = SensorDataCache()
 
         # Конфигурация датчиков
-        gps_config = config.get("gps", {})
+        gps_config = config.data.gps
         self.sensors_config = {
-            s["id"]: s for s in gps_config.get("sensors", [])
+            s.id: s for s in gps_config.sensors
         }
 
         # Статистика обработки
@@ -285,7 +238,14 @@ class GPSDataHandler:
         """
         try:
             # Создание структуры данных
-            coordinates = GPSCoordinates(lat, lon, alt)
+            
+            if (lat <= 0) | (lon <= 0):
+                self.logger.debug('Нет данных GPS')
+                return False
+
+            coordinates = GPSCoordinates(lat=lat, lon=lon, alt=alt)
+            # Если есть предыдущая точка — вычисляем скорость
+
             metrics = GPSMetrics(
                 hdop=kwargs.get("hdop"),
                 num_sats=kwargs.get("num_sats"),
@@ -295,9 +255,24 @@ class GPSDataHandler:
             )
             data_point = GPSDataPoint(
                 sensor_id, timestamp, coordinates, metrics)
+            last_valid_point = self.cache.get_last_data(sensor_id)
+
+            if "speed" not in kwargs or kwargs["speed"] is None:
+                # Вычисляем скорость по предыдущей точке
+                # минимум 0.9 секунда
+                if last_valid_point and abs(timestamp - last_valid_point.timestamp) > 900:
+                    computed_speed = last_valid_point.estimated_speed_to(
+                        data_point)
+                    # Фильтр шума
+                    if last_valid_point.coordinates.distance_to(data_point.coordinates) < 2.0:
+                        computed_speed = 0.0
+                    metrics.speed = computed_speed
+                else:
+                    metrics.speed = 0.0  # по умолчанию — стоянка
+            else:
+                metrics.speed = kwargs.get("speed")
 
             # Валидация
-            last_valid_point = self.cache.get_last_data(sensor_id)
             validation_result, reason = self.validator.validate(
                 data_point, last_valid_point)
 
@@ -327,8 +302,9 @@ class GPSDataHandler:
     def _save_to_database(self, data_point: GPSDataPoint) -> bool:
         """Сохраняет данные в базу данных."""
         try:
+            
             data_json = json.dumps(data_point.to_storage_dict())
-            self.db_manager.add_sensor_data(
+            self.db_manager.save_sensor_data(
                 data_point.timestamp,
                 "gps",
                 data_point.sensor_id,

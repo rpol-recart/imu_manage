@@ -36,8 +36,8 @@ class StatePredictor:
         """
         self.logger = LoggerService.get_logger(self.__class__.__name__)
         self.config = config
-        self.extrap_config = config.get("extrapolation", {})
-        self.fusion_config = config.get("fusion", {})
+        self.extrap_config = config.data.extrapolation
+        self.fusion_config = config.data.fusion
         self.logger.info("StatePredictor инициализирован")
 
     def predict_position(self, fused_state: Dict[str, Any], target_timestamp: int) -> Dict[str, Any]:

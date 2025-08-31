@@ -7,7 +7,7 @@
 """
 
 import math
-from typing import Tuple, Optional
+from typing import Tuple, Optional,Dict,List,Any
 
 # Константы для оптимизации
 _EPSILON = 1e-10
@@ -90,7 +90,7 @@ def interpolate_gps_data(data_list: list, target_timestamp: int) -> dict or None
     # Проверка: находится ли целевое время в пределах ±500 мс от диапазона данных
     min_time = min(timestamps)
     max_time = max(timestamps)
-    window_ms = 500
+    window_ms = 2000
 
     if target_timestamp < min_time - window_ms or target_timestamp > max_time + window_ms:
         return None

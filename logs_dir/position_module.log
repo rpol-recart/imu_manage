@@ -1,0 +1,240 @@
+2025-08-31 22:22:50,031 - navigation_sys.services.logger_service - INFO - LoggerService сконфигурирован.
+2025-08-31 22:22:50,031 - navigation_sys.services.logger_service - DEBUG - Конфигурация: level=10, dir=logs_dir
+2025-08-31 22:22:50,031 - ConfigManager - INFO - Config loaded from /home/roman/projects/imu_manage/navigation_sys/configs/default_config.json
+2025-08-31 22:22:50,032 - ConfigProvider - INFO - Configuration validated successfully.
+2025-08-31 22:22:50,084 - navigation_sys.services.logger_service - WARNING - LoggerService уже инициализирован; повторная конфигурация игнорируется.
+2025-08-31 22:22:50,084 - navigation_sys.core.position_estimator - INFO - Инициализация модуля PositionEstimator
+2025-08-31 22:22:50,153 - DatabaseManager - INFO - Схема базы данных инициализирована.
+2025-08-31 22:22:50,154 - DatabaseManager - INFO - DatabaseManager инициализирован. БД: test_sensor_data.db
+2025-08-31 22:22:50,154 - GPSDataHandler - INFO - GPSDataHandler инициализирован с 2 датчиками
+2025-08-31 22:22:50,154 - IMUDataHandler - INFO - IMUDataHandler инициализирован
+2025-08-31 22:22:50,154 - PositionFuser - INFO - PositionFuser инициализирован
+2025-08-31 22:22:50,155 - StatePredictor - INFO - StatePredictor инициализирован
+2025-08-31 22:22:50,155 - DatabaseManager - DEBUG - Сохраненное состояние модуля не найдено.
+2025-08-31 22:22:50,156 - navigation_sys.core.position_estimator - INFO - Модуль PositionEstimator инициализирован успешно
+2025-08-31 22:22:50,156 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=55.75581313168287, lon=37.617252577890866, alt=150.36277419247386, time=1756653770156
+2025-08-31 22:22:50,157 - GPSDataHandler - DEBUG - GPS 2 данные успешно обработаны
+2025-08-31 22:22:50,157 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653770157
+2025-08-31 22:22:50,158 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653770157: GPS0 записей, IMU: False
+2025-08-31 22:22:50,158 - PositionFuser - INFO - Нет данных GPS
+2025-08-31 22:22:50,160 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:22:50,686 - DatabaseManager - DEBUG - Записан пакет данных в БД: 1 записей.
+2025-08-31 22:22:52,160 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=55.75582572886907, lon=37.617224683046, alt=149.68173431715718, time=1756653772160
+2025-08-31 22:22:52,161 - GPSDataHandler - DEBUG - GPS 2 данные успешно обработаны
+2025-08-31 22:22:52,162 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653772162
+2025-08-31 22:22:52,176 - DatabaseManager - DEBUG - Записан пакет данных в БД: 1 записей.
+2025-08-31 22:22:52,182 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653772162: GPS2 записей, IMU: False
+2025-08-31 22:22:52,182 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:22:52,183 - PositionFuser - DEBUG - Фузия завершена для времени 1756653772162
+2025-08-31 22:22:52,185 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:22:54,186 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=55.75584931850975, lon=37.61718952331772, alt=150.31880159967096, time=1756653774185
+2025-08-31 22:22:54,186 - GPSDataHandler - DEBUG - GPS 2 данные успешно обработаны
+2025-08-31 22:22:54,187 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653774187
+2025-08-31 22:22:54,200 - DatabaseManager - DEBUG - Записан пакет данных в БД: 1 записей.
+2025-08-31 22:22:54,207 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653774187: GPS3 записей, IMU: False
+2025-08-31 22:22:54,207 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:22:54,208 - PositionFuser - DEBUG - Фузия завершена для времени 1756653774187
+2025-08-31 22:22:54,210 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:22:56,210 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=55.75587926037456, lon=37.61714135390141, alt=149.51388185563323, time=1756653776210
+2025-08-31 22:22:56,211 - GPSDataHandler - DEBUG - GPS 2 данные успешно обработаны
+2025-08-31 22:22:56,211 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653776211
+2025-08-31 22:22:56,225 - DatabaseManager - DEBUG - Записан пакет данных в БД: 1 записей.
+2025-08-31 22:22:56,232 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653776211: GPS4 записей, IMU: False
+2025-08-31 22:22:56,232 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:22:56,233 - PositionFuser - DEBUG - Фузия завершена для времени 1756653776211
+2025-08-31 22:22:56,234 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:22:58,235 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=55.75590777999965, lon=37.617108987900316, alt=149.47385576690127, time=1756653778235
+2025-08-31 22:22:58,236 - GPSDataHandler - DEBUG - GPS 2 данные успешно обработаны
+2025-08-31 22:22:58,236 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653778236
+2025-08-31 22:22:58,267 - DatabaseManager - DEBUG - Записан пакет данных в БД: 1 записей.
+2025-08-31 22:22:58,272 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653778236: GPS5 записей, IMU: False
+2025-08-31 22:22:58,272 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:22:58,273 - PositionFuser - DEBUG - Фузия завершена для времени 1756653778236
+2025-08-31 22:22:58,274 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:23:00,275 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=55.75592503301996, lon=37.617096554468965, alt=150.16181560925443, time=1756653780275
+2025-08-31 22:23:00,276 - GPSDataHandler - DEBUG - GPS 2 данные успешно обработаны
+2025-08-31 22:23:00,276 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653780276
+2025-08-31 22:23:00,303 - DatabaseManager - DEBUG - Записан пакет данных в БД: 1 записей.
+2025-08-31 22:23:00,312 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653780276: GPS6 записей, IMU: False
+2025-08-31 22:23:00,312 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:23:00,313 - PositionFuser - DEBUG - Фузия завершена для времени 1756653780276
+2025-08-31 22:23:00,314 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:23:02,315 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=55.755976846824744, lon=37.61707041132825, alt=150.0003349192759, time=1756653782315
+2025-08-31 22:23:02,316 - GPSDataHandler - DEBUG - GPS 2 данные успешно обработаны
+2025-08-31 22:23:02,316 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653782316
+2025-08-31 22:23:02,347 - DatabaseManager - DEBUG - Записан пакет данных в БД: 1 записей.
+2025-08-31 22:23:02,352 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653782316: GPS7 записей, IMU: False
+2025-08-31 22:23:02,352 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:23:02,353 - PositionFuser - DEBUG - Фузия завершена для времени 1756653782316
+2025-08-31 22:23:02,355 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:23:04,356 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=55.75603596994833, lon=37.61704510337449, alt=149.80412685789443, time=1756653784356
+2025-08-31 22:23:04,356 - GPSDataHandler - DEBUG - GPS 2 данные успешно обработаны
+2025-08-31 22:23:04,357 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653784357
+2025-08-31 22:23:04,395 - DatabaseManager - DEBUG - Записан пакет данных в БД: 1 записей.
+2025-08-31 22:23:04,413 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653784357: GPS8 записей, IMU: False
+2025-08-31 22:23:04,413 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:23:04,414 - PositionFuser - DEBUG - Фузия завершена для времени 1756653784357
+2025-08-31 22:23:04,416 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:23:06,416 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=55.75603882961743, lon=37.61704457639391, alt=149.7658464341816, time=1756653786416
+2025-08-31 22:23:06,417 - GPSDataHandler - DEBUG - GPS 2 данные успешно обработаны
+2025-08-31 22:23:06,418 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653786418
+2025-08-31 22:23:06,453 - DatabaseManager - DEBUG - Записан пакет данных в БД: 1 записей.
+2025-08-31 22:23:06,474 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653786418: GPS9 записей, IMU: False
+2025-08-31 22:23:06,475 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:23:06,476 - PositionFuser - DEBUG - Фузия завершена для времени 1756653786418
+2025-08-31 22:23:06,478 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:23:08,478 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=55.75607003959639, lon=37.61703004704089, alt=150.06377917141455, time=1756653788478
+2025-08-31 22:23:08,479 - GPSDataHandler - DEBUG - GPS 2 данные успешно обработаны
+2025-08-31 22:23:08,479 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653788479
+2025-08-31 22:23:08,506 - DatabaseManager - DEBUG - Записан пакет данных в БД: 1 записей.
+2025-08-31 22:23:08,515 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653788479: GPS10 записей, IMU: False
+2025-08-31 22:23:08,516 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:23:08,516 - PositionFuser - DEBUG - Фузия завершена для времени 1756653788479
+2025-08-31 22:23:08,518 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:23:10,519 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=55.75612647842845, lon=37.617025029652204, alt=149.714230831748, time=1756653790518
+2025-08-31 22:23:10,519 - GPSDataHandler - DEBUG - GPS 2 данные успешно обработаны
+2025-08-31 22:23:10,520 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653790520
+2025-08-31 22:23:10,534 - DatabaseManager - DEBUG - Записан пакет данных в БД: 1 записей.
+2025-08-31 22:23:10,540 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653790520: GPS11 записей, IMU: False
+2025-08-31 22:23:10,541 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:23:10,542 - PositionFuser - DEBUG - Фузия завершена для времени 1756653790520
+2025-08-31 22:23:10,544 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:23:12,545 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=55.75615868406628, lon=37.617010500994006, alt=150.1082566204651, time=1756653792545
+2025-08-31 22:23:12,546 - GPSDataHandler - DEBUG - GPS 2 данные успешно обработаны
+2025-08-31 22:23:12,546 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653792546
+2025-08-31 22:23:12,580 - DatabaseManager - DEBUG - Записан пакет данных в БД: 1 записей.
+2025-08-31 22:23:12,582 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653792546: GPS12 записей, IMU: False
+2025-08-31 22:23:12,582 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:23:12,583 - PositionFuser - DEBUG - Фузия завершена для времени 1756653792546
+2025-08-31 22:23:12,585 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:23:14,585 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=55.75619668525715, lon=37.61697597777242, alt=149.55028879902108, time=1756653794585
+2025-08-31 22:23:14,586 - GPSDataHandler - DEBUG - GPS 2 данные успешно обработаны
+2025-08-31 22:23:14,586 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653794586
+2025-08-31 22:23:14,614 - DatabaseManager - DEBUG - Записан пакет данных в БД: 1 записей.
+2025-08-31 22:23:14,623 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653794586: GPS13 записей, IMU: False
+2025-08-31 22:23:14,623 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:23:14,624 - PositionFuser - DEBUG - Фузия завершена для времени 1756653794586
+2025-08-31 22:23:14,626 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:23:16,627 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=55.75622396023175, lon=37.61694234080821, alt=149.46162891587147, time=1756653796627
+2025-08-31 22:23:16,628 - GPSDataHandler - DEBUG - GPS 2 данные успешно обработаны
+2025-08-31 22:23:16,628 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653796628
+2025-08-31 22:23:16,658 - DatabaseManager - DEBUG - Записан пакет данных в БД: 1 записей.
+2025-08-31 22:23:16,664 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653796628: GPS14 записей, IMU: False
+2025-08-31 22:23:16,664 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:23:16,665 - PositionFuser - DEBUG - Фузия завершена для времени 1756653796628
+2025-08-31 22:23:16,667 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:23:18,667 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=0.0, lon=0.0, alt=0.0, time=1756653798667
+2025-08-31 22:23:18,668 - GPSDataHandler - DEBUG - Нет данных GPS
+2025-08-31 22:23:18,668 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653798668
+2025-08-31 22:23:18,670 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653798668: GPS14 записей, IMU: False
+2025-08-31 22:23:18,670 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:23:18,671 - PositionFuser - DEBUG - Фузия завершена для времени 1756653798668
+2025-08-31 22:23:18,672 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:23:20,673 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=0.0, lon=0.0, alt=0.0, time=1756653800673
+2025-08-31 22:23:20,673 - GPSDataHandler - DEBUG - Нет данных GPS
+2025-08-31 22:23:20,674 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653800674
+2025-08-31 22:23:20,675 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653800674: GPS14 записей, IMU: False
+2025-08-31 22:23:20,676 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:23:20,677 - PositionFuser - DEBUG - Фузия завершена для времени 1756653800674
+2025-08-31 22:23:20,678 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:23:22,679 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=0.0, lon=0.0, alt=0.0, time=1756653802679
+2025-08-31 22:23:22,679 - GPSDataHandler - DEBUG - Нет данных GPS
+2025-08-31 22:23:22,680 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653802679
+2025-08-31 22:23:22,681 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653802679: GPS14 записей, IMU: False
+2025-08-31 22:23:22,682 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:23:22,682 - PositionFuser - DEBUG - Фузия завершена для времени 1756653802679
+2025-08-31 22:23:22,684 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:23:24,685 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=0.0, lon=0.0, alt=0.0, time=1756653804684
+2025-08-31 22:23:24,685 - GPSDataHandler - DEBUG - Нет данных GPS
+2025-08-31 22:23:24,685 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653804685
+2025-08-31 22:23:24,687 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653804685: GPS14 записей, IMU: False
+2025-08-31 22:23:24,688 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:23:24,688 - PositionFuser - DEBUG - Фузия завершена для времени 1756653804685
+2025-08-31 22:23:24,690 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:23:26,690 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=0.0, lon=0.0, alt=0.0, time=1756653806690
+2025-08-31 22:23:26,691 - GPSDataHandler - DEBUG - Нет данных GPS
+2025-08-31 22:23:26,691 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653806691
+2025-08-31 22:23:26,693 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653806691: GPS14 записей, IMU: False
+2025-08-31 22:23:26,693 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:23:26,694 - PositionFuser - DEBUG - Фузия завершена для времени 1756653806691
+2025-08-31 22:23:26,695 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:23:28,696 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=55.75599371907395, lon=37.616935737779215, alt=150.4011469296769, time=1756653808696
+2025-08-31 22:23:28,697 - GPSDataHandler - DEBUG - GPS 2 данные успешно обработаны
+2025-08-31 22:23:28,698 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653808698
+2025-08-31 22:23:28,725 - DatabaseManager - DEBUG - Записан пакет данных в БД: 1 записей.
+2025-08-31 22:23:28,735 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653808698: GPS15 записей, IMU: False
+2025-08-31 22:23:28,736 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:23:28,737 - PositionFuser - DEBUG - Фузия завершена для времени 1756653808698
+2025-08-31 22:23:28,740 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:23:30,741 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=55.75595346394222, lon=37.6169424742458, alt=150.33349253605556, time=1756653810741
+2025-08-31 22:23:30,742 - GPSDataHandler - DEBUG - GPS 2 данные успешно обработаны
+2025-08-31 22:23:30,742 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653810742
+2025-08-31 22:23:30,788 - DatabaseManager - DEBUG - Записан пакет данных в БД: 1 записей.
+2025-08-31 22:23:30,798 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653810742: GPS15 записей, IMU: False
+2025-08-31 22:23:30,799 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:23:30,799 - PositionFuser - DEBUG - Фузия завершена для времени 1756653810742
+2025-08-31 22:23:30,801 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:23:32,802 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=55.75590173568642, lon=37.616972668435515, alt=149.77923413703584, time=1756653812802
+2025-08-31 22:23:32,802 - GPSDataHandler - DEBUG - GPS 2 данные успешно обработаны
+2025-08-31 22:23:32,803 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653812803
+2025-08-31 22:23:33,175 - DatabaseManager - DEBUG - Записан пакет данных в БД: 1 записей.
+2025-08-31 22:23:33,234 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653812803: GPS15 записей, IMU: False
+2025-08-31 22:23:33,235 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:23:33,236 - PositionFuser - DEBUG - Фузия завершена для времени 1756653812803
+2025-08-31 22:23:33,237 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:23:35,238 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=55.75584799681024, lon=37.616979835995096, alt=149.8756392281596, time=1756653815238
+2025-08-31 22:23:35,239 - GPSDataHandler - DEBUG - GPS 2 данные успешно обработаны
+2025-08-31 22:23:35,239 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653815239
+2025-08-31 22:23:35,274 - DatabaseManager - DEBUG - Записан пакет данных в БД: 1 записей.
+2025-08-31 22:23:35,275 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653815239: GPS15 записей, IMU: False
+2025-08-31 22:23:35,276 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:23:35,276 - PositionFuser - DEBUG - Фузия завершена для времени 1756653815239
+2025-08-31 22:23:35,278 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:23:37,279 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=55.755837550209534, lon=37.616977723145716, alt=150.0049242572516, time=1756653817279
+2025-08-31 22:23:37,279 - GPSDataHandler - DEBUG - GPS 2 данные успешно обработаны
+2025-08-31 22:23:37,280 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653817280
+2025-08-31 22:23:37,313 - DatabaseManager - DEBUG - Записан пакет данных в БД: 1 записей.
+2025-08-31 22:23:37,316 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653817280: GPS15 записей, IMU: False
+2025-08-31 22:23:37,316 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:23:37,317 - PositionFuser - DEBUG - Фузия завершена для времени 1756653817280
+2025-08-31 22:23:37,318 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:23:39,319 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=55.7557881329219, lon=37.616988069557245, alt=149.79832787524245, time=1756653819319
+2025-08-31 22:23:39,320 - GPSDataHandler - DEBUG - GPS 2 данные успешно обработаны
+2025-08-31 22:23:39,320 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653819320
+2025-08-31 22:23:39,354 - DatabaseManager - DEBUG - Записан пакет данных в БД: 1 записей.
+2025-08-31 22:23:39,356 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653819320: GPS15 записей, IMU: False
+2025-08-31 22:23:39,357 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:23:39,357 - PositionFuser - DEBUG - Фузия завершена для времени 1756653819320
+2025-08-31 22:23:39,359 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:23:41,360 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=55.75573209185748, lon=37.61697416885148, alt=150.04761185161365, time=1756653821359
+2025-08-31 22:23:41,360 - GPSDataHandler - DEBUG - GPS 2 данные успешно обработаны
+2025-08-31 22:23:41,361 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653821361
+2025-08-31 22:23:41,395 - DatabaseManager - DEBUG - Записан пакет данных в БД: 1 записей.
+2025-08-31 22:23:41,397 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653821361: GPS15 записей, IMU: False
+2025-08-31 22:23:41,397 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:23:41,398 - PositionFuser - DEBUG - Фузия завершена для времени 1756653821361
+2025-08-31 22:23:41,399 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:23:43,400 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=55.7556895568512, lon=37.61697939714158, alt=149.85912555669128, time=1756653823400
+2025-08-31 22:23:43,401 - GPSDataHandler - DEBUG - GPS 2 данные успешно обработаны
+2025-08-31 22:23:43,401 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653823401
+2025-08-31 22:23:43,415 - DatabaseManager - DEBUG - Записан пакет данных в БД: 1 записей.
+2025-08-31 22:23:43,422 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653823401: GPS15 записей, IMU: False
+2025-08-31 22:23:43,422 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:23:43,423 - PositionFuser - DEBUG - Фузия завершена для времени 1756653823401
+2025-08-31 22:23:43,425 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:23:45,425 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=55.755648230499524, lon=37.61698938495413, alt=149.6219471351315, time=1756653825425
+2025-08-31 22:23:45,426 - GPSDataHandler - DEBUG - GPS 2 данные успешно обработаны
+2025-08-31 22:23:45,426 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653825426
+2025-08-31 22:23:45,454 - DatabaseManager - DEBUG - Записан пакет данных в БД: 1 записей.
+2025-08-31 22:23:45,462 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653825426: GPS15 записей, IMU: False
+2025-08-31 22:23:45,463 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:23:45,463 - PositionFuser - DEBUG - Фузия завершена для времени 1756653825426
+2025-08-31 22:23:45,465 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:23:47,466 - navigation_sys.core.position_estimator - DEBUG - Получены GPS данные от датчика 2: lat=55.75559255065374, lon=37.61701354099919, alt=149.722357109558, time=1756653827466
+2025-08-31 22:23:47,467 - GPSDataHandler - DEBUG - GPS 2 данные успешно обработаны
+2025-08-31 22:23:47,467 - navigation_sys.core.position_estimator - DEBUG - Запрос состояния на время: 1756653827467
+2025-08-31 22:23:47,469 - DatabaseManager - DEBUG - Получены данные для фузии на время 1756653827467: GPS15 записей, IMU: False
+2025-08-31 22:23:47,470 - PositionFuser - DEBUG - Агрегированы данные GPS от 1 датчиков
+2025-08-31 22:23:47,470 - PositionFuser - DEBUG - Фузия завершена для времени 1756653827467
+2025-08-31 22:23:47,472 - DatabaseManager - DEBUG - Статистика данных получена.
+2025-08-31 22:23:47,509 - DatabaseManager - DEBUG - Записан пакет данных в БД: 1 записей.

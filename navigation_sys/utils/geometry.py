@@ -6,7 +6,7 @@
 """
 
 import math
-from typing import Tuple, Dict, List, Optional
+from typing import Tuple, Dict, List, Optional,Any
 from dataclasses import dataclass
 
 # Константы для геодезических расчетов

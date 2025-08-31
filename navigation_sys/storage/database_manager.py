@@ -8,7 +8,10 @@ import os
 from typing import Dict, Any, List, Optional, Tuple
 import logging
 from queue import Queue, Empty
-from ..services.logger_service import LoggerService # Предполагается, что LoggerService уже реализован
+from ..configs import ConfigProvider
+# Предполагается, что LoggerService уже реализован
+from ..services.logger_service import LoggerService
+
 
 class DatabaseManager:
     """
@@ -16,7 +19,7 @@ class DatabaseManager:
     и предоставляет методы для их извлечения.
     """
 
-    def __init__(self, config: Dict[str, Any]):
+    def __init__(self, config: ConfigProvider):
         """
         Инициализирует менеджер базы данных.
 
@@ -25,11 +28,12 @@ class DatabaseManager:
         """
         self.logger = LoggerService.get_logger(self.__class__.__name__)
         self._config = config
-        self._db_path = self._config.get("database", {}).get("path", "sensor_data.db")
+        self._db_path = self._config.data.database.path
 
         # Настройки записи
-        self._batch_size = 10  # Записывать каждые N сообщений
-        self._batch_timeout_sec = 0.5 # Или каждые N секунд
+        # Записывать каждые N сообщений
+        self._batch_size = self._config.data.database.batch_size
+        self._batch_timeout_sec = self._config.data.database.batch_timeout  # Или каждые N секунд
 
         # Очередь для асинхронной записи
         self._write_queue: Queue = Queue()
@@ -41,14 +45,18 @@ class DatabaseManager:
 
         # Инициализация БД и запуск фонового потока
         self._init_database()
-        self._writer_thread = threading.Thread(target=self._writer_worker, daemon=True, name="DBWriterThread")
+        self._writer_thread = threading.Thread(
+            target=self._writer_worker, daemon=True, name="DBWriterThread")
         self._writer_thread.start()
-        self.logger.info(f"DatabaseManager инициализирован. БД: {self._db_path}")
+        self.logger.info(
+            f"DatabaseManager инициализирован. БД: {self._db_path}")
 
     def _get_connection(self) -> sqlite3.Connection:
         """Получает новое соединение с БД. Используется в основном потоке записи."""
-        conn = sqlite3.connect(self._db_path, check_same_thread=False) # check_same_thread=False для использования в worker
-        conn.row_factory = sqlite3.Row # Для удобного доступа к столбцам по имени
+        conn = sqlite3.connect(
+            # check_same_thread=False для использования в worker
+            self._db_path, check_same_thread=False)
+        conn.row_factory = sqlite3.Row  # Для удобного доступа к столбцам по имени
         return conn
 
     def _init_database(self):
@@ -79,8 +87,10 @@ class DatabaseManager:
                     )
                 """)
                 # Создание индексов
-                cursor.execute("CREATE INDEX IF NOT EXISTS idx_sensor_data_timestamp ON sensor_data(timestamp)")
-                cursor.execute("CREATE INDEX IF NOT EXISTS idx_sensor_data_type ON sensor_data(sensor_type)")
+                cursor.execute(
+                    "CREATE INDEX IF NOT EXISTS idx_sensor_data_timestamp ON sensor_data(timestamp)")
+                cursor.execute(
+                    "CREATE INDEX IF NOT EXISTS idx_sensor_data_type ON sensor_data(sensor_type)")
                 # Создание таблицы для хранения состояния модуля (если нужно)
                 cursor.execute("""
                     CREATE TABLE IF NOT EXISTS module_state (
@@ -96,7 +106,6 @@ class DatabaseManager:
         except Exception as e:
             self.logger.error(f"Ошибка инициализации базы данных: {e}")
             raise
-
 
     def _writer_worker(self):
         """Фоновый поток для асинхронной записи данных в БД."""
@@ -136,7 +145,7 @@ class DatabaseManager:
         if not batch:
             return
         try:
-             # Используем временное соединение для записи
+            # Используем временное соединение для записи
             conn = self._get_connection()
             cursor = conn.cursor()
             # Используем executemany для эффективности
@@ -146,13 +155,13 @@ class DatabaseManager:
             )
             conn.commit()
             conn.close()
-            self.logger.debug(f"Записан пакет данных в БД: {len(batch)} записей.")
+            self.logger.debug(
+                f"Записан пакет данных в БД: {len(batch)} записей.")
         except Exception as e:
             self.logger.error(f"Ошибка записи пакета данных в БД: {e}")
             # В реальной системе здесь можно добавить логику повтора или сохранения в файл
 
-
-    def save_sensor_data(self, timestamp: int, sensor_type: str, sensor_id: Optional[int], data: Dict[str, Any]):
+    def save_sensor_data(self, timestamp: int, sensor_type: str, sensor_id: Optional[int], data_json_str: str):
         """
         Асинхронно сохраняет данные датчика в очередь для записи в БД.
 
@@ -160,15 +169,15 @@ class DatabaseManager:
             timestamp (int): Временная метка Unix (мс).
             sensor_type (str): Тип датчика ('gps', 'imu_raw', 'orientation').
             sensor_id (int, optional): ID датчика (1, 2 для GPS).
-            data (dict): Данные датчика в формате JSON-сериализуемого словаря.
+            data (str): Данные датчика в формате словаря сериализованные в JSON
         """
         try:
-            data_json_str = json.dumps(data, ensure_ascii=False)
+            #data_json_str = json.dumps(data, ensure_ascii=False)
             # Кладем данные в очередь для обработки фоновым потоком
-            self._write_queue.put((timestamp, sensor_type, sensor_id, data_json_str))
+            self._write_queue.put(
+                (timestamp, sensor_type, sensor_id, data_json_str))
         except Exception as e:
             self.logger.error(f"Ошибка постановки данных в очередь БД: {e}")
-
 
     def save_calibration(self, sensor_name: str, parameters: Dict[str, Any], date_calibrated: int = None):
         """
@@ -193,10 +202,11 @@ class DatabaseManager:
                 """, (sensor_name, parameters_json_str, date_calibrated))
                 conn.commit()
                 conn.close()
-            self.logger.info(f"Калибровочные данные для '{sensor_name}' сохранены.")
+            self.logger.info(
+                f"Калибровочные данные для '{sensor_name}' сохранены.")
         except Exception as e:
-            self.logger.error(f"Ошибка сохранения калибровочных данных для '{sensor_name}': {e}")
-
+            self.logger.error(
+                f"Ошибка сохранения калибровочных данных для '{sensor_name}': {e}")
 
     def get_calibration(self, sensor_name: str) -> Optional[Dict[str, Any]]:
         """
@@ -221,10 +231,12 @@ class DatabaseManager:
                 if row:
                     return json.loads(row['parameters_json'])
                 else:
-                    self.logger.debug(f"Калибровочные данные для '{sensor_name}' не найдены.")
+                    self.logger.debug(
+                        f"Калибровочные данные для '{sensor_name}' не найдены.")
                     return None
         except Exception as e:
-            self.logger.error(f"Ошибка получения калибровочных данных для '{sensor_name}': {e}")
+            self.logger.error(
+                f"Ошибка получения калибровочных данных для '{sensor_name}': {e}")
             return None
 
     def get_data_for_time(self, target_timestamp: int, window_ms: int = 1000) -> Dict[str, Any]:
@@ -240,9 +252,9 @@ class DatabaseManager:
                   Пример: {'gps': {1: {...}, 2: {...}}, 'imu': {...}}
         """
         half_window = window_ms // 2
-        start_time = target_timestamp - half_window
+        start_time = target_timestamp - self._config.data.gps.history_window_ms
         end_time = target_timestamp + half_window
-        result_data = {'gps': {}, 'imu': {}}
+        result_data = {'gps': [], 'imu': []}
 
         try:
             with self._db_lock:
@@ -250,25 +262,28 @@ class DatabaseManager:
                 cursor = conn.cursor()
 
                 # Получаем последние GPS данные до или в окне для каждого сенсора
-                gps_sensors_config = self._config.get("gps", {}).get("sensors", [])
+                gps_sensors_config = self._config.data.gps.sensors
                 for sensor_cfg in gps_sensors_config:
-                    sensor_id = sensor_cfg.get("id")
+                    sensor_id = sensor_cfg.id
                     if sensor_id is not None:
                         cursor.execute("""
                             SELECT * FROM sensor_data
                             WHERE sensor_type = 'gps' AND sensor_id = ? AND timestamp BETWEEN ? AND ?
-                            ORDER BY timestamp DESC LIMIT 1
+                            ORDER BY timestamp DESC LIMIT 15
                         """, (sensor_id, start_time, end_time))
-                        row = cursor.fetchone()
-                        if row:
-                            try:
-                                result_data['gps'][sensor_id] = {
-                                    'timestamp': row['timestamp'],
-                                    'data': json.loads(row['data_json']),
-                                    'sensor_id': row['sensor_id']
-                                }
-                            except json.JSONDecodeError:
-                                self.logger.error(f"Ошибка декодирования JSON для GPS {sensor_id} в момент {row['timestamp']}")
+                        rows = cursor.fetchall()
+
+                        for row in rows:
+                            if row:
+                                try:
+                                    result_data['gps'].append({
+                                        'timestamp': row['timestamp'],
+                                        'data': json.loads(row['data_json']),
+                                        'sensor_id': row['sensor_id']
+                                    })
+                                except json.JSONDecodeError:
+                                    self.logger.error(
+                                        f"Ошибка декодирования JSON для GPS {sensor_id} в момент {row['timestamp']}")
 
                 # Получаем последние IMU данные (предполагаем, что тип 'imu_raw' или 'orientation')
                 # Можно уточнить, какой тип использовать или брать оба
@@ -278,24 +293,28 @@ class DatabaseManager:
                     ORDER BY timestamp DESC LIMIT 1
                 """, (start_time, end_time))
                 row = cursor.fetchone()
+                
                 if row:
-                     try:
+                    try:
                         result_data['imu'] = {
                             'timestamp': row['timestamp'],
-                            'type': row['sensor_type'], # Уточняем тип IMU данных
+                            # Уточняем тип IMU данных
+                            'type': row['sensor_type'],
                             'data': json.loads(row['data_json'])
                         }
-                     except json.JSONDecodeError:
-                         self.logger.error(f"Ошибка декодирования JSON для IMU в момент {row['timestamp']}")
+                    except json.JSONDecodeError:
+                        self.logger.error(
+                            f"Ошибка декодирования JSON для IMU в момент {row['timestamp']}")
 
                 conn.close()
-            self.logger.debug(f"Получены данные для фузии на время {target_timestamp}: {list(result_data['gps'].keys())}, IMU: {'type' in result_data['imu']}")
+            self.logger.debug(
+                f"Получены данные для фузии на время {target_timestamp}: GPS{len(result_data['gps'])} записей, IMU: {'type' in result_data['imu']}")
             return result_data
 
         except Exception as e:
-            self.logger.error(f"Ошибка получения данных для фузии на время {target_timestamp}: {e}")
+            self.logger.error(
+                f"Ошибка получения данных для фузии на время {target_timestamp}: {e}")
             return {'gps': {}, 'imu': {}}
-
 
     def get_last_state(self) -> Optional[Dict[str, Any]]:
         """
@@ -308,14 +327,16 @@ class DatabaseManager:
             with self._db_lock:
                 conn = self._get_connection()
                 cursor = conn.cursor()
-                cursor.execute("SELECT state_json FROM module_state WHERE id = 1")
+                cursor.execute(
+                    "SELECT state_json FROM module_state WHERE id = 1")
                 row = cursor.fetchone()
                 conn.close()
 
                 if row:
                     return json.loads(row['state_json'])
                 else:
-                    self.logger.debug("Сохраненное состояние модуля не найдено.")
+                    self.logger.debug(
+                        "Сохраненное состояние модуля не найдено.")
                     return None
         except Exception as e:
             self.logger.error(f"Ошибка восстановления состояния модуля: {e}")
@@ -344,7 +365,6 @@ class DatabaseManager:
         except Exception as e:
             self.logger.error(f"Ошибка сохранения состояния модуля: {e}")
 
-
     def cleanup_old_data(self, retention_minutes: int):
         """
         Удаляет старые данные из таблицы sensor_data.
@@ -353,7 +373,8 @@ class DatabaseManager:
             retention_minutes (int): Время хранения данных в минутах.
         """
         try:
-            cutoff_timestamp = int(time.time() * 1000) - (retention_minutes * 60 * 1000)
+            cutoff_timestamp = int(time.time() * 1000) - \
+                (retention_minutes * 60 * 1000)
             with self._db_lock:
                 conn = self._get_connection()
                 cursor = conn.cursor()
@@ -364,7 +385,8 @@ class DatabaseManager:
                 conn.commit()
                 conn.close()
             if deleted_count > 0:
-                self.logger.info(f"Очищено {deleted_count} старых записей из sensor_data.")
+                self.logger.info(
+                    f"Очищено {deleted_count} старых записей из sensor_data.")
         except Exception as e:
             self.logger.error(f"Ошибка очистки старых данных: {e}")
 
@@ -386,7 +408,8 @@ class DatabaseManager:
                 stats['total_records'] = cursor.fetchone()['total']
 
                 # Последнее обновление (максимальная временная метка)
-                cursor.execute("SELECT MAX(timestamp) as last_update FROM sensor_data")
+                cursor.execute(
+                    "SELECT MAX(timestamp) as last_update FROM sensor_data")
                 row = cursor.fetchone()
                 stats['last_update_timestamp'] = row['last_update'] if row['last_update'] else None
 
@@ -394,16 +417,19 @@ class DatabaseManager:
                 cursor.execute("""
                     SELECT sensor_type, COUNT(*) as count FROM sensor_data GROUP BY sensor_type
                 """)
-                stats['records_by_type'] = {row['sensor_type']: row['count'] for row in cursor.fetchall()}
+                stats['records_by_type'] = {
+                    row['sensor_type']: row['count'] for row in cursor.fetchall()}
 
                 # Количество записей по ID GPS сенсоров
                 cursor.execute("""
                     SELECT sensor_id, COUNT(*) as count FROM sensor_data WHERE sensor_type = 'gps' GROUP BY sensor_id
                 """)
-                stats['gps_records_by_id'] = {row['sensor_id']: row['count'] for row in cursor.fetchall()}
+                stats['gps_records_by_id'] = {
+                    row['sensor_id']: row['count'] for row in cursor.fetchall()}
 
-                 # Последняя калибровка
-                cursor.execute("SELECT sensor_name, date_calibrated FROM calibration ORDER BY date_calibrated DESC LIMIT 1")
+                # Последняя калибровка
+                cursor.execute(
+                    "SELECT sensor_name, date_calibrated FROM calibration ORDER BY date_calibrated DESC LIMIT 1")
                 row = cursor.fetchone()
                 if row:
                     stats['last_calibration'] = {
@@ -423,7 +449,7 @@ class DatabaseManager:
         self.logger.info("Запрос на остановку DatabaseManager.")
         self._stop_event.set()
         if self._writer_thread.is_alive():
-            self._writer_thread.join(timeout=2) # Ждем завершения потока
+            self._writer_thread.join(timeout=2)  # Ждем завершения потока
             if self._writer_thread.is_alive():
                 self.logger.warning("Поток записи БД не завершился вовремя.")
         self.logger.info("DatabaseManager закрыт.")
